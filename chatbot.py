@@ -10,11 +10,13 @@ Original file is located at
 """
 
 import pandas as pd
+import os
+from dotenv import load_dotenv
 import numpy as np
 from langchain.tools import tool
 from langchain.agents import AgentType, initialize_agent, Tool
 from langchain.chains import LLMChain
-from langchain_openai import AzureChatOpenAI
+from langchain_community.llms import HuggingFaceHub
 from langchain.prompts import PromptTemplate
 from langchain.agents import ZeroShotAgent
 from langchain.agents import AgentExecutor, create_openai_functions_agent
@@ -28,6 +30,8 @@ from pydantic import BaseModel
 
 
 """# Preprocessing Data"""
+
+load_dotenv()
 
 people_to_places_df = pd.read_csv("/Users/nischithsrikanth/Desktop/norman sicily/people_to_places.csv")
 places_to_places_df = pd.read_csv("/Users/nischithsrikanth/Desktop/norman sicily/places_to_places.csv")
@@ -83,13 +87,11 @@ class SearchVectorStoreInputSchema(BaseModel):
     query: str
     k: int
 
+
 def get_chatbot_response(user_input):
-    llm = AzureChatOpenAI(
-        azure_deployment= "---",
-        openai_api_version= "---",
-        azure_endpoint= "---",
-        api_key= "---",
-        temperature=0,
+    llm = HuggingFaceHub(
+        repo_id="openchat/gpt-oss-120b",
+        model_kwargs={"temperature": 0, "max_new_tokens": 512}
     )
 
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
