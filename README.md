@@ -53,12 +53,16 @@ This will open a web-based chat interface in your browser using the gpt-oss-120b
 
 **Data Files**
 
-Ensure the following files are in the same directory:
+By default, the following files should be placed in a `data/` directory in your project root:
 
-people_to_places.csv
+- data/people_to_places.csv
+- data/places_to_places.csv
+- data/combined_output.txt
 
-places_to_places.csv
+You can change the data directory by setting the `DATA_DIR` environment variable (e.g., in your `.env` file):
 
-combined_output.txt
+```
+DATA_DIR=/path/to/your/data
+```
 
-These are loaded at runtime by the chatbot.
+These files are loaded at runtime by the chatbot.

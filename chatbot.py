@@ -31,10 +31,18 @@ from pydantic import BaseModel
 
 """# Preprocessing Data"""
 
+
 load_dotenv()
 
-people_to_places_df = pd.read_csv("/Users/nischithsrikanth/Desktop/norman sicily/people_to_places.csv")
-places_to_places_df = pd.read_csv("/Users/nischithsrikanth/Desktop/norman sicily/places_to_places.csv")
+# Use DATA_DIR env var or default to 'data' subdirectory
+DATA_DIR = os.getenv("DATA_DIR", os.path.join(os.path.dirname(__file__), "data"))
+
+people_to_places_path = os.path.join(DATA_DIR, "people_to_places.csv")
+places_to_places_path = os.path.join(DATA_DIR, "places_to_places.csv")
+combined_output_path = os.path.join(DATA_DIR, "combined_output.txt")
+
+people_to_places_df = pd.read_csv(people_to_places_path)
+places_to_places_df = pd.read_csv(places_to_places_path)
 
 """# Embeddings"""
 
@@ -96,7 +104,7 @@ def get_chatbot_response(user_input):
 
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-    sample_docs = TextLoader("/Users/nischithsrikanth/Desktop/norman sicily/combined_output.txt").load()
+    sample_docs = TextLoader(combined_output_path).load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
     sample_docs = text_splitter.split_documents(sample_docs)
 
